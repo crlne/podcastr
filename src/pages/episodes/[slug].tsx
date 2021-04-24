@@ -1,46 +1,49 @@
-import { GetStaticPaths, GetStaticProps } from 'next';
-import { useRouter } from 'next/router';
 import { format, parseISO } from 'date-fns';
-import ptBR from 'date-fns/locale/pt-BR'
+import  ptBR  from 'date-fns/locale/pt-BR';
+import Image from 'next/image';
+import Link from 'next/link';
+import { GetStaticPaths, GetStaticProps } from 'next';
 import { api } from '../../services/api';
-import Image from 'next/image'
-import Link from 'next/link'
 import { convertDurationToTimeString } from '../../utils/convertDurationToTimeString';
 
-import styles from './episodes.module.scss'
-
+import styles from './episode.module.scss';
+import Head from 'next/head';
+import { usePlayer } from '../../context/PlayerContext';
 
 type Episode = {
     id: string;
     title: string;
     thumbnail: string;
     members: string;
+    publishedAt: string;
     duration: number;
     durationAsString: string;
     url: string;
-    publishedAt: string;
     description: string;
-  }
+}
 
-  type EpisodeProps = {
+type EpisodeProps = {
     episode: Episode;
 }
-  
+
 export default function Episode({ episode }: EpisodeProps) {
- 
+    const { play } = usePlayer();
     return (
-        <div className={styles.episodes}>
+        <div className ={styles.episode}>
+            <Head>
+                <title>{episode.title}</title>
+            </Head>
             <div className={styles.thumbnailContainer}>
                 <Link href="/">
-               <button type="button">
-                 <img src="/arrow-left.svg" alt="voltar" />
-               </button>
-               </Link>
+                    <button type="button">
+                        <img src="/arrow-left.svg" alt= "Voltar" />
+                    </button>
+                </Link>
                <Image width={700} height={160} src={episode.thumbnail} objectFit="cover" />
 
-               <button type="button">
-                 <img src="/play.svg" alt="tocar episode" />
-               </button>
+               <button type="button" onClick={() => play(episode)}>
+                    <img src="/play.svg" alt= "Tocar episódio" />
+                </button>
             </div>
 
             <header>
@@ -50,7 +53,10 @@ export default function Episode({ episode }: EpisodeProps) {
                 <span>{episode.durationAsString}</span>
             </header>
 
-            <div className={styles.description} dangerouslySetInnerHTML={{ __html: episode.description }}  />
+            <div 
+                className={styles.description} 
+                dangerouslySetInnerHTML={{__html:episode.description}} 
+            />
         </div>
     )
 }
