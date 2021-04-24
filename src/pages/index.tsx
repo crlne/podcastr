@@ -7,7 +7,8 @@ import ptBR from 'date-fns/locale/pt-BR'
 import { convertDurationToTimeString } from '../utils/convertDurationToTimeString'
 
 import styles from './home.module.scss'
-import { PlayerContext, usePlayer } from '../context/PlayerContext'
+import { usePlayer } from '../context/PlayerContext'
+import Head from 'next/head'
 
 
 type Episode = {
@@ -35,6 +36,9 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
 
   return (
     <div className={styles.homePage}>
+      <Head>
+        <title>Home</title>
+      </Head>
       <section className={styles.latestEpisodes}>
         <h2>Ultimos lançamentos</h2>
         <ul>

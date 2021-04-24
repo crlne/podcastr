@@ -13,7 +13,7 @@ export function Player() {
     const [progress, setProgress] = useState(0);
 
     const { episodeList, currentEpisodeIndex, isPlaying, togglePlay, setPlayingState, isShuffling,
-        playNext, playPrevious, hasNext, hasPrevious, isLooping, toggleLoop, toggleShuffle,
+        playNext, playPrevious, hasNext, hasPrevious, isLooping, toggleLoop, toggleShuffle, clearPlayerState
     } = usePlayer()
 
     useEffect(() => {
@@ -35,9 +35,18 @@ export function Player() {
         })
     }
 
+
     function handleSeek(amount: number) {
         audioRef.current.currentTime = amount;
         setProgress(amount);
+    }
+
+    function handleEpisodesEnded() {
+        if (hasNext) {
+            playNext()
+        } else {
+            clearPlayerState()     
+        }
     }
 
     const episode = episodeList[currentEpisodeIndex]
@@ -90,6 +99,7 @@ export function Player() {
                         loop={isLooping}
                         onPlay={()=>setPlayingState(true)}
                         onPause={()=>setPlayingState(false)}
+                        onEnded={handleEpisodesEnded}
                         onLoadedMetadata={setupProgressListener}
                     />
                 )}
